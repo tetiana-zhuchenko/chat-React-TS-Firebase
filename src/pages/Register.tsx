@@ -8,25 +8,25 @@ import { doc, setDoc } from 'firebase/firestore'
 
 const Register = () => {
   const [err, setErr] = useState(false)
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // setLoading(true)
+    setLoading(true)
     e.preventDefault()
     const formData = new FormData(e.target as HTMLFormElement)
     const displayName = formData.get('displayName') as string
     const email = formData.get('email') as string
     const password = formData.get('password') as string
     const file = formData.get('file') as File
-    console.log(file)
+
     try {
       //Create user
       const res = await createUserWithEmailAndPassword(auth, email, password)
-      console.log(res)
+
       //Create a unique image name
-      // const date = new Date().getTime()
-      const storageRef = ref(storage, displayName)
+      const date = new Date().getTime()
+      const storageRef = ref(storage, `${displayName + date}`)
 
       const uploadTask = uploadBytesResumable(storageRef, file)
 
@@ -39,7 +39,6 @@ const Register = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            console.log('file available at', downloadURL)
             await updateProfile(res.user, {
               displayName,
               photoURL: downloadURL,
@@ -58,7 +57,7 @@ const Register = () => {
     } catch (err) {
       setErr(true)
       console.error('first', err)
-      // setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -93,7 +92,7 @@ const Register = () => {
             <span>Add an avatar</span>
           </label>
           <button>Sign up</button>
-          {/* {loading && "Uploading and compressing the image please wait..."} */}
+          {loading && 'Uploading and compressing the image please wait...'}
           {err && <span>Something went wrong</span>}
         </form>
         <p>

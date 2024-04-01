@@ -9,7 +9,7 @@ import { AuthContext } from './context/AuthContext'
 
 function App() {
   const { currentUser } = useContext(AuthContext)
-  console.log('test', currentUser)
+  console.log('currentUser', currentUser)
 
   const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     if (!currentUser) {
